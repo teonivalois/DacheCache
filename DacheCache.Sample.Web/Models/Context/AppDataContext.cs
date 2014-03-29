@@ -9,7 +9,7 @@ using System.Web;
 namespace DacheCache.Sample.Web.Models.Context {
     public class AppDataContext : DbContext {
 
-        public DbSet<Person> People { get; set; }
+        public DbSet<Customer> Customers { get; set; }
 
         static AppDataContext() {
             Database.SetInitializer<AppDataContext>(null);

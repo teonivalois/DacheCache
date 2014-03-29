@@ -10,7 +10,7 @@ namespace DacheCache.Sample.Web.Controllers {
     public class HomeController : Controller {
         public ActionResult Index() {
             using (AppDataContext ctx = new AppDataContext()) {
-                List<Person> people = ctx.People.ToList();
+                List<Customer> customers = ctx.Customers.ToList();
             }
             return View();
         }
