@@ -7,6 +7,7 @@ using System.Web;
 
 namespace DacheCache.Sample.Web.Models {
     
+    [Serializable]
     public class Customer {
         [Key, Required]
         public string CustomerID { get; set; }

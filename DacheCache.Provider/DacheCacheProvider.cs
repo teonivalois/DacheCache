@@ -1,9 +1,14 @@
 ﻿using Dache.Client;
-using EFCachingProvider.Caching;
+using EFCache;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using System.Xml;
 
 namespace DacheCache.Provider {
@@ -22,6 +27,11 @@ namespace DacheCache.Provider {
         }
 
         public bool GetItem(string key, out object value) {
+            if (!ShouldCache(key)) {
+                value = null;
+                return false;
+            }
+
             List<CacheEntry> cacheEntries = null;
             _client.TryGet<List<CacheEntry>>(_entitySetRelationsKey, out cacheEntries);
             if (cacheEntries != null) {
@@ -62,20 +72,89 @@ namespace DacheCache.Provider {
             }
         }
 
-        public void PutItem(string key, object value, IEnumerable<string> dependentEntitySets, TimeSpan slidingExpiration, DateTime absoluteExpiration) {
+        public void PutItem(string key, object value, IEnumerable<string> dependentEntitySets, TimeSpan slidingExpiration, DateTimeOffset absoluteExpiration) {
             List<CacheEntry> cacheEntries = null;
             _client.TryGet<List<CacheEntry>>(_entitySetRelationsKey, out cacheEntries);
             Guid cacheKey = Guid.NewGuid();
             if (cacheEntries != null) {
                 CacheEntry cacheEntry = cacheEntries.SingleOrDefault(x => x.Key == key);
                 if (cacheEntry == null) {
-                    cacheEntries.Add(new CacheEntry(cacheKey, key, dependentEntitySets));
+                    cacheEntries.Add(new CacheEntry(cacheKey, key, dependentEntitySets.ToArray()));
                 } else {
                     cacheEntry.CacheKey = cacheKey;
                 }
                 _client.AddOrUpdate(_entitySetRelationsKey, cacheEntries);
             }
-            _client.AddOrUpdate(cacheKey.ToString(), value, new TimeSpan(0, 30, 0));
+            if (slidingExpiration > TimeSpan.MinValue && slidingExpiration < TimeSpan.MaxValue) {
+                _client.AddOrUpdate(cacheKey.ToString(), value, slidingExpiration);
+            } else {
+                _client.AddOrUpdate(cacheKey.ToString(), value, absoluteExpiration);
+            }
+        }
+
+        public bool ShouldCache(string commandText) {
+            commandText = commandText.Replace("\n", string.Empty);
+            commandText = commandText.Replace("\t", string.Empty);
+            commandText = commandText.Replace("\r", string.Empty);
+
+            string hash = String.Join("", MD5.Create().ComputeHash(Encoding.UTF8.GetBytes(commandText)).Select(x => x.ToString("X2")));
+
+            string path = null;
+            if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings["DacheCache.ConfigFile"])) {
+                path = ConfigurationManager.AppSettings["DacheCache.ConfigFile"];
+            }
+
+            if (path == null) {
+                return true;
+            } else if (path.StartsWith("~/") && HttpContext.Current != null) {
+                path = HttpContext.Current.Server.MapPath(path);
+            }
+
+            bool isLearning = true;
+            if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings["DacheCache.Learning"])) {
+                Boolean.TryParse(ConfigurationManager.AppSettings["DacheCache.Learning"], out isLearning);
+            }
+
+            XmlDocument document = new XmlDocument();
+            if (File.Exists(path)) {
+                document.Load(path);
+            } else {
+                AddElement(document, "DacheCache", null, document);
+            }
+
+            XmlNodeList nodes = document.SelectNodes("/DacheCache/Entry[@ID='" + hash + "']");
+            foreach (XmlNode item in nodes) {
+                if (item.InnerText.Equals(commandText, StringComparison.InvariantCultureIgnoreCase)) {
+                    try {
+                        return Convert.ToBoolean(item.Attributes["Cacheable"].Value);
+                    } catch {
+                        return false;
+                    }
+                }
+            }
+
+            if (isLearning) {
+                XmlElement newEntryNode = AddElement(document, "Entry", commandText, document.LastChild);
+                newEntryNode.Attributes.Append(CreateAttribute(document, "ID", hash));
+                newEntryNode.Attributes.Append(CreateAttribute(document, "Cacheable", "false"));
+                document.Save(path);
+            }
+            return false;
+        }
+
+        private static XmlElement AddElement(XmlDocument document, string name, string innerText, XmlNode parentNode) {
+            XmlElement element = document.CreateElement(name);
+            element.InnerText = innerText;
+            if (parentNode != null) {
+                parentNode.AppendChild(element);
+            }
+            return element;
+        }
+
+        private XmlAttribute CreateAttribute(XmlDocument document, string name, string value) {
+            XmlAttribute attribute = document.CreateAttribute(name);
+            attribute.Value = value;
+            return attribute;
         }
     }
 }
