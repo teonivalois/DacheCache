@@ -26,11 +26,13 @@ namespace DacheCache.Provider {
             }
         }
 
-        public bool GetItem(string key, out object value) {
+        public bool GetItem(string key, Dictionary<string, object> parameters, out object value) {
             if (!ShouldCache(key)) {
                 value = null;
                 return false;
             }
+
+            key = ApplyParameters(key, parameters);
 
             List<CacheEntry> cacheEntries = null;
             _client.TryGet<List<CacheEntry>>(_entitySetRelationsKey, out cacheEntries);
@@ -72,7 +74,10 @@ namespace DacheCache.Provider {
             }
         }
 
-        public void PutItem(string key, object value, IEnumerable<string> dependentEntitySets, TimeSpan slidingExpiration, DateTimeOffset absoluteExpiration) {
+        public void PutItem(string key, Dictionary<string, object> parameters, object value, IEnumerable<string> dependentEntitySets, TimeSpan slidingExpiration, DateTimeOffset absoluteExpiration) {
+
+            key = ApplyParameters(key, parameters);
+
             List<CacheEntry> cacheEntries = null;
             _client.TryGet<List<CacheEntry>>(_entitySetRelationsKey, out cacheEntries);
             Guid cacheKey = Guid.NewGuid();
@@ -90,6 +95,13 @@ namespace DacheCache.Provider {
             } else {
                 _client.AddOrUpdate(cacheKey.ToString(), value, absoluteExpiration);
             }
+        }
+
+        public string ApplyParameters(string key, Dictionary<string, object> parameters) {
+            foreach (var parameter in parameters) {
+                key = key.Replace(parameter.Key, string.Format("{0}", parameter.Value));
+            }
+            return key;
         }
 
         public bool ShouldCache(string commandText) {
