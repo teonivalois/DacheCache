@@ -9,8 +9,11 @@ using System.Web.Mvc;
 namespace DacheCache.Sample.Web.Controllers {
     public class HomeController : Controller {
         public ActionResult Index() {
-            using (AppDataContext ctx = new AppDataContext()) {
-                List<Customer> customers = ctx.Customers.ToList();
+            using (AppDbContext ctx = new AppDbContext()) {
+                List<Product> products = ctx.Products.ToList();
+                foreach (var p in products) {
+                    Category category = p.Category;
+                }
             }
             return View();
         }
