@@ -46,7 +46,9 @@ namespace DacheCache.Provider {
             return false;
         }
 
-        public void InvalidateItem(string key) {
+        public void InvalidateItem(string key, Dictionary<string, object> parameters) {
+            key = ApplyParameters(key, parameters);
+
             List<CacheEntry> cacheEntries = null;
             _client.TryGet<List<CacheEntry>>(_entitySetRelationsKey, out cacheEntries);
             if (cacheEntries != null) {
@@ -75,7 +77,6 @@ namespace DacheCache.Provider {
         }
 
         public void PutItem(string key, Dictionary<string, object> parameters, object value, IEnumerable<string> dependentEntitySets, TimeSpan slidingExpiration, DateTimeOffset absoluteExpiration) {
-
             key = ApplyParameters(key, parameters);
 
             List<CacheEntry> cacheEntries = null;
@@ -98,8 +99,10 @@ namespace DacheCache.Provider {
         }
 
         public string ApplyParameters(string key, Dictionary<string, object> parameters) {
-            foreach (var parameter in parameters) {
-                key = key.Replace(parameter.Key, string.Format("{0}", parameter.Value));
+            if (parameters != null) {
+                foreach (var parameter in parameters) {
+                    key = key.Replace(parameter.Key, string.Format("{0}", parameter.Value));
+                }
             }
             return key;
         }
