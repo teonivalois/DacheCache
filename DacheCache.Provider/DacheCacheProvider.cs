@@ -26,14 +26,7 @@ namespace DacheCache.Provider {
             }
         }
 
-        public bool GetItem(string key, Dictionary<string, object> parameters, out object value) {
-            if (!ShouldCache(key)) {
-                value = null;
-                return false;
-            }
-
-            key = ApplyParameters(key, parameters);
-
+        public bool GetItem(string key, out object value) {
             List<CacheEntry> cacheEntries = null;
             _client.TryGet<List<CacheEntry>>(_entitySetRelationsKey, out cacheEntries);
             if (cacheEntries != null) {
@@ -46,9 +39,7 @@ namespace DacheCache.Provider {
             return false;
         }
 
-        public void InvalidateItem(string key, Dictionary<string, object> parameters) {
-            key = ApplyParameters(key, parameters);
-
+        public void InvalidateItem(string key) {
             List<CacheEntry> cacheEntries = null;
             _client.TryGet<List<CacheEntry>>(_entitySetRelationsKey, out cacheEntries);
             if (cacheEntries != null) {
@@ -76,9 +67,7 @@ namespace DacheCache.Provider {
             }
         }
 
-        public void PutItem(string key, Dictionary<string, object> parameters, object value, IEnumerable<string> dependentEntitySets, TimeSpan slidingExpiration, DateTimeOffset absoluteExpiration) {
-            key = ApplyParameters(key, parameters);
-
+        public void PutItem(string key, object value, IEnumerable<string> dependentEntitySets, TimeSpan slidingExpiration, DateTimeOffset absoluteExpiration) {
             List<CacheEntry> cacheEntries = null;
             _client.TryGet<List<CacheEntry>>(_entitySetRelationsKey, out cacheEntries);
             Guid cacheKey = Guid.NewGuid();
@@ -96,80 +85,6 @@ namespace DacheCache.Provider {
             } else {
                 _client.AddOrUpdate(cacheKey.ToString(), value, absoluteExpiration);
             }
-        }
-
-        public string ApplyParameters(string key, Dictionary<string, object> parameters) {
-            if (parameters != null) {
-                foreach (var parameter in parameters) {
-                    key = key.Replace(parameter.Key, string.Format("{0}", parameter.Value));
-                }
-            }
-            return key;
-        }
-
-        public bool ShouldCache(string commandText) {
-            commandText = commandText.Replace("\n", string.Empty);
-            commandText = commandText.Replace("\t", string.Empty);
-            commandText = commandText.Replace("\r", string.Empty);
-
-            string hash = String.Join("", MD5.Create().ComputeHash(Encoding.UTF8.GetBytes(commandText)).Select(x => x.ToString("X2")));
-
-            string path = null;
-            if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings["DacheCache.ConfigFile"])) {
-                path = ConfigurationManager.AppSettings["DacheCache.ConfigFile"];
-            }
-
-            if (path == null) {
-                return true;
-            } else if (path.StartsWith("~/") && HttpContext.Current != null) {
-                path = HttpContext.Current.Server.MapPath(path);
-            }
-
-            bool isLearning = true;
-            if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings["DacheCache.Learning"])) {
-                Boolean.TryParse(ConfigurationManager.AppSettings["DacheCache.Learning"], out isLearning);
-            }
-
-            XmlDocument document = new XmlDocument();
-            if (File.Exists(path)) {
-                document.Load(path);
-            } else {
-                AddElement(document, "DacheCache", null, document);
-            }
-
-            XmlNodeList nodes = document.SelectNodes("/DacheCache/Entry[@ID='" + hash + "']");
-            foreach (XmlNode item in nodes) {
-                if (item.InnerText.Equals(commandText, StringComparison.InvariantCultureIgnoreCase)) {
-                    try {
-                        return Convert.ToBoolean(item.Attributes["Cacheable"].Value);
-                    } catch {
-                        return false;
-                    }
-                }
-            }
-
-            if (isLearning) {
-                XmlElement newEntryNode = AddElement(document, "Entry", commandText, document.LastChild);
-                newEntryNode.Attributes.Append(CreateAttribute(document, "ID", hash));
-                newEntryNode.Attributes.Append(CreateAttribute(document, "Cacheable", "false"));
-                document.Save(path);
-            }
-            return false;
-        }
-
-        private static XmlElement AddElement(XmlDocument document, string name, string innerText, XmlNode parentNode) {
-            XmlElement element = document.CreateElement(name);
-            element.InnerText = innerText;
-            if (parentNode != null) {
-                parentNode.AppendChild(element);
-            }
-            return element;
-        }
-
-        private XmlAttribute CreateAttribute(XmlDocument document, string name, string value) {
-            XmlAttribute attribute = document.CreateAttribute(name);
-            attribute.Value = value;
-            return attribute;
         }
     }
 }

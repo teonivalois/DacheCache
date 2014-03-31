@@ -18,7 +18,7 @@ namespace DacheCache.Sample.Web.Models.Context {
             Loaded +=
               (sender, args) => args.ReplaceService<DbProviderServices>(
                 (s, _) => new CachingProviderServices(s, transactionHandler,
-                  new DacheCachePolicy()));
+                  new DacheCachingPolicy()));
         }
 
     }
