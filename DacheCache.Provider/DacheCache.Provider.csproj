@@ -33,11 +33,9 @@
     <Reference Include="Dache.Client">
       <HintPath>..\Libs\Dache.Client.dll</HintPath>
     </Reference>
-    <Reference Include="EFCachingProvider">
-      <HintPath>..\Libs\EFCachingProvider.dll</HintPath>
-    </Reference>
-    <Reference Include="EFProviderWrapperToolkit">
-      <HintPath>..\Libs\EFProviderWrapperToolkit.dll</HintPath>
+    <Reference Include="EFCache, Version=1.0.0.0, Culture=neutral, PublicKeyToken=46c4868af4307d2c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.Cache.1.0.0-alpha2\lib\EFCache.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework">
       <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.dll</HintPath>
@@ -58,7 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CacheEntry.cs" />
-    <Compile Include="DacheCachePolicy.cs" />
+    <Compile Include="DacheCachingPolicy.cs" />
     <Compile Include="DacheCacheProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -11,9 +11,7 @@ namespace DacheCache.Sample.Web.Controllers {
         public ActionResult Index() {
             using (AppDbContext ctx = new AppDbContext()) {
                 List<Product> products = ctx.Products.ToList();
-                foreach (var p in products) {
-                    Category category = p.Category;
-                }
+                Category firstCategory = products.First().Category;
             }
             return View();
         }

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Web;
 
 namespace DacheCache.Sample.Web.Models.Context {
-    public class AppDbContext : DbContext {
+    public class AppDbContext :DbContext {
 
         public DbSet<Category> Categories { get; set; }
         public DbSet<Customer> Customers { get; set; }
@@ -19,6 +19,5 @@ namespace DacheCache.Sample.Web.Models.Context {
         public AppDbContext()
             : base("connection") {
         }
-
     }
 }

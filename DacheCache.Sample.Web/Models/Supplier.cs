@@ -22,6 +22,5 @@ namespace DacheCache.Sample.Web.Models {
         public string Phone { get; set; }
         public string Fax { get; set; }
         public string HomePage { get; set; }
-
     }
 }

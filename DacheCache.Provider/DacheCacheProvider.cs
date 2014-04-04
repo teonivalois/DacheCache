@@ -1,9 +1,14 @@
 ﻿using Dache.Client;
-using EFCachingProvider.Caching;
+using EFCache;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using System.Xml;
 
 namespace DacheCache.Provider {
@@ -62,20 +67,24 @@ namespace DacheCache.Provider {
             }
         }
 
-        public void PutItem(string key, object value, IEnumerable<string> dependentEntitySets, TimeSpan slidingExpiration, DateTime absoluteExpiration) {
+        public void PutItem(string key, object value, IEnumerable<string> dependentEntitySets, TimeSpan slidingExpiration, DateTimeOffset absoluteExpiration) {
             List<CacheEntry> cacheEntries = null;
             _client.TryGet<List<CacheEntry>>(_entitySetRelationsKey, out cacheEntries);
             Guid cacheKey = Guid.NewGuid();
             if (cacheEntries != null) {
                 CacheEntry cacheEntry = cacheEntries.SingleOrDefault(x => x.Key == key);
                 if (cacheEntry == null) {
-                    cacheEntries.Add(new CacheEntry(cacheKey, key, dependentEntitySets));
+                    cacheEntries.Add(new CacheEntry(cacheKey, key, dependentEntitySets.ToArray()));
                 } else {
                     cacheEntry.CacheKey = cacheKey;
                 }
                 _client.AddOrUpdate(_entitySetRelationsKey, cacheEntries);
             }
-            _client.AddOrUpdate(cacheKey.ToString(), value, new TimeSpan(0, 30, 0));
+            if (slidingExpiration > TimeSpan.MinValue && slidingExpiration < TimeSpan.MaxValue) {
+                _client.AddOrUpdate(cacheKey.ToString(), value, slidingExpiration);
+            } else {
+                _client.AddOrUpdate(cacheKey.ToString(), value, absoluteExpiration);
+            }
         }
     }
 }
