@@ -3,7 +3,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Data.Entity.Core.Metadata.Edm;
 
-namespace DacheCache.Provider {
+namespace DacheCache.Provider.EF {
     public class DacheCachingPolicy : CachingPolicy {
         protected override bool CanBeCached(ReadOnlyCollection<EntitySetBase> affectedEntitySets) {
             return true;

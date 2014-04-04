@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DacheCache.Provider {
+namespace DacheCache.Provider.EF {
 
     [Serializable]
     internal class CacheEntry : IEquatable<CacheEntry> {

@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Express 2013 for Web
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DacheCache.Provider", "DacheCache.Provider\DacheCache.Provider.csproj", "{9547E415-D431-4776-B628-3DDBAB99D3D7}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DacheCache.Sample.Web", "DacheCache.Sample.Web\DacheCache.Sample.Web.csproj", "{44B77A45-1585-4958-91A4-1DA10DA02FA6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DacheCache.Provider.EF", "DacheCache.Provider.EF\DacheCache.Provider.EF.csproj", "{9547E415-D431-4776-B628-3DDBAB99D3D7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{9547E415-D431-4776-B628-3DDBAB99D3D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9547E415-D431-4776-B628-3DDBAB99D3D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9547E415-D431-4776-B628-3DDBAB99D3D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9547E415-D431-4776-B628-3DDBAB99D3D7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{44B77A45-1585-4958-91A4-1DA10DA02FA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{44B77A45-1585-4958-91A4-1DA10DA02FA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{44B77A45-1585-4958-91A4-1DA10DA02FA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{44B77A45-1585-4958-91A4-1DA10DA02FA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9547E415-D431-4776-B628-3DDBAB99D3D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9547E415-D431-4776-B628-3DDBAB99D3D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9547E415-D431-4776-B628-3DDBAB99D3D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9547E415-D431-4776-B628-3DDBAB99D3D7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

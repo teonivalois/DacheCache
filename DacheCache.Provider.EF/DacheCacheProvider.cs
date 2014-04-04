@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DacheCache.Provider {
+namespace DacheCache.Provider.EF {
     public sealed class DacheCacheProvider : ICache {
 
         private static readonly string _entitySetRelationsKey = "__EntitySetRelationship__";
