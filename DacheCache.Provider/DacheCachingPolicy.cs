@@ -1,18 +1,7 @@
 ﻿using EFCache;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Configuration;
-using System.Data.Common;
-using System.Data.Entity.Core;
 using System.Data.Entity.Core.Metadata.Edm;
-using System.IO;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
-using System.Xml;
 
 namespace DacheCache.Provider {
     public class DacheCachingPolicy : CachingPolicy {
