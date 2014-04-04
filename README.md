@@ -28,3 +28,8 @@ public class MyApplicationDbConfiguration : DbConfiguration {
 ```
 
 Done! You now have a L2 cache for your EF6 Data Context.
+
+Credits
+========
+
+Many thanks to Aleyant Systems, LLC (http://www.aleyant.com) that pushed me towards this research and encouraged me to share our findings.
