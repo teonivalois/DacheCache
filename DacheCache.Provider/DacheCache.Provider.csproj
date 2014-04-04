@@ -33,9 +33,9 @@
     <Reference Include="Dache.Client">
       <HintPath>..\Libs\Dache.Client.dll</HintPath>
     </Reference>
-    <Reference Include="EFCache, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="EFCache, Version=1.0.0.0, Culture=neutral, PublicKeyToken=46c4868af4307d2c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Libs\EFCache.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.Cache.1.0.0-alpha2\lib\EFCache.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework">
       <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.dll</HintPath>
