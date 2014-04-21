@@ -1,3 +1,12 @@
+Installation
+--------------
+
+```sh
+PM> Install-Package DacheCache.Provider.EF -Pre
+```
+
+Install Dache (http://www.getdache.net) and follow the configuration instructions (https://github.com/ironyx/dache#installation-instructions). 
+
 How to use it
 ========
 
@@ -18,9 +27,9 @@ public class MyApplicationDbConfiguration : DbConfiguration {
 }
 ```
 
-Installation
---------------
+Done! You now have a L2 cache for your EF6 Data Context.
 
-```sh
-PM> Install-Package DacheCache.Provider.EF -Pre
-```
+Credits
+========
+
+Many thanks to Aleyant Systems, LLC (http://www.aleyant.com) that pushed me towards this research and encouraged me to share our findings.
