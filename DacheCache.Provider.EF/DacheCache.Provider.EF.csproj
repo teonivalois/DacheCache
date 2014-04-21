@@ -30,8 +30,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Dache.Client">
-      <HintPath>..\Libs\Dache.Client.dll</HintPath>
+    <Reference Include="Dache.Client, Version=1.3.1.37090, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Dache.Client.1.3.1\lib\Dache.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Dache.Core">
+      <HintPath>..\packages\Dache.Client.1.3.1\lib\Dache.Core.dll</HintPath>
     </Reference>
     <Reference Include="EFCache, Version=1.0.0.0, Culture=neutral, PublicKeyToken=46c4868af4307d2c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -42,6 +46,12 @@
     </Reference>
     <Reference Include="EntityFramework.SqlServer">
       <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpMemoryCache">
+      <HintPath>..\packages\Dache.Client.1.3.1\lib\SharpMemoryCache.dll</HintPath>
+    </Reference>
+    <Reference Include="SimplSockets">
+      <HintPath>..\packages\Dache.Client.1.3.1\lib\SimplSockets.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
