@@ -75,9 +75,9 @@ namespace DacheCache.Provider.EF {
                 _client.AddOrUpdate(_entitySetRelationsKey, cacheEntries);
             }
             if (slidingExpiration > TimeSpan.MinValue && slidingExpiration < TimeSpan.MaxValue) {
-                _client.AddOrUpdate(cacheKey.ToString(), value, slidingExpiration);
+                _client.AddOrUpdate(cacheKey.ToString(), value, null, null, slidingExpiration);
             } else {
-                _client.AddOrUpdate(cacheKey.ToString(), value, absoluteExpiration);
+                _client.AddOrUpdate(cacheKey.ToString(), value, null, absoluteExpiration, null);
             }
         }
     }
