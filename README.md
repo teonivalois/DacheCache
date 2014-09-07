@@ -27,7 +27,7 @@ public class MyApplicationDbConfiguration : DbConfiguration {
 }
 ```
 
-Add the following antries to your Web.Config file:
+Make sure you have Dache client configured for your web project, then add the following entries to your Web.Config file:
 
 ```xml
   <appSettings>
@@ -36,8 +36,6 @@ Add the following antries to your Web.Config file:
     <add key="DacheCache.Learning" value="true" />
   </appSettings>    
 ```
-
-Make sure you have Dache client configured for your web project.
 
 Done! You now have a L2 cache for your EF6 Data Context.
 
